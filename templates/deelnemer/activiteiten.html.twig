@@ -1,0 +1,122 @@
+{% extends 'deelnemer.html.twig' %}
+{% block menu %}
+    <li class="active"><a href="{{ path('activiteiten') }}">home</a></li>
+    <li><a href="{{ path('user_bezoeker_edit', {'id': app.user.id}) }}">Account</a></li>
+
+
+{% endblock %}
+
+
+{% block content %}
+<section >
+    <table class="table" style="table-layout: fixed" >
+        <caption>
+            Dit zijn alle beschikbare activiteiten
+        </caption>
+        <thead>
+        <tr>
+            <td>datum</td>
+            <td>tijd</td>
+            <td>soort activiteit</td>
+            <td>prijs</td>
+            <td>Plaatsen</td>
+            <td>schrijf in</td>
+        </tr>
+        </thead>
+        <tbody>
+        {% for activiteit in beschikbare_activiteiten %}
+            {% if date(activiteit.datum|date("d-m-Y") ~ activiteit.tijd|date("H:i")) >= date() %}
+                <tr>
+                    <td>
+                        {{ activiteit.datum|date("d-m-Y")}}
+                    </td>
+                    <td>
+                        {{ activiteit.tijd|date("H:i")}}
+                    </td>
+
+                    <td>
+                        {{ activiteit.soort.naam}}
+                    </td>
+                    <td>
+                        &euro;{{ activiteit.soort.prijs|number_format(2,',','.')}}
+                    </td>
+                    <td>
+                        {{ activiteit.maxUsers - activiteit.users|length }}
+                    </td>
+                    <td title="schrijf in voor activiteit">
+
+
+                        <{% if (activiteit.maxUsers - activiteit.users|length) <= 0 %}div{% else %}a{% endif %} href="{% if (activiteit.maxUsers - activiteit.users|length) > 0 %} {{ path('inschrijven', {'id':activiteit.id}) }} {% endif %}" >
+                            <span class="glyphicon glyphicon-plus" style="{% if (activiteit.maxUsers - activiteit.users|length) <= 0 %}color:gray{% else %}color:red{% endif %}"></span>
+                        </{% if (activiteit.maxUsers - activiteit.users|length) <= 0 %}div{% else %}a{% endif %}>
+                    </td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <table class="table" style="table-layout: fixed">
+        <caption>
+            Dit zijn de door jou ingeschreven activiteiten
+        </caption>
+        <thead>
+        <tr>
+            <td>datum</td>
+            <td>tijd</td>
+            <td>soort activiteit</td>
+            <td>prijs</td>
+            <td>Plaatsen</td>
+            <td>schrijf uit</td>
+        </tr>
+        </thead>
+        <tbody>
+        {% for activiteit in ingeschreven_activiteiten %}
+            <tr>
+                <td>
+                    {{ activiteit.datum|date("d-m-Y")}}
+                </td>
+                <td>
+                    {{ activiteit.tijd|date("H:i")}}
+                </td>
+
+                <td>
+                    {{ activiteit.soort.naam}}
+                </td>
+                <td>
+                    &euro;{{ activiteit.soort.prijs|number_format(2,',','.')}}
+                </td>
+
+                <td>
+                    {{ activiteit.maxUsers - activiteit.users|length }}
+                </td>
+                <td title="schrijf in voor activiteit">
+                    <a href="{{ path('uitschrijven', {'id':activiteit.id}) }}" >
+                        <span class="glyphicon glyphicon-minus" style="color:red"></span>
+                    </a>
+                </td>
+
+            </tr>
+        {% endfor %}
+        <tr>
+            <td>
+            </td>
+            <td>
+            </td>
+            <td>
+                Totaal prijs:
+            </td>
+            <td>
+                &euro;{{totaal|number_format(2,',','.')}}
+
+            </td>
+            <td>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+</section>
+
+
+{% endblock %}

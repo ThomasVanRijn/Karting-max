@@ -1,0 +1,18 @@
+{% extends 'medewerker.html.twig' %}
+
+{% block menu %}
+    <li><a href="{{ path('activiteitenoverzicht') }}">home</a></li>
+    <li><a href="{{ path('beheer') }}"><span class="badge">{{ activiteiten|length }}</span>beheer</a></li>
+    <li><a href="{{ path('soortactiviteiten_index') }}">Soort Activiteiten</a></li>
+    <li class="active"><a href="{{ path('user_index') }}">Gebruikers</a></li>
+{% endblock %}
+
+{% block content %}
+    <h1>Edit User</h1>
+
+    {{ include('user/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('user_index') }}">back to list</a>
+
+    {{ include('user/_delete_form.html.twig') }}
+{% endblock %}
